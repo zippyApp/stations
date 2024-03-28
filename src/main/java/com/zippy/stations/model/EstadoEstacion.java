@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "estado_estacion")
+@Table(name = "station_status")
 public class EstadoEstacion {
 
     @Id
@@ -15,7 +15,7 @@ public class EstadoEstacion {
     @Column
     private Long id;
 
-    @Column(name = "nombre_estado")
+    @Column(name = "name")
     private String nombreEstado;
 
 }
