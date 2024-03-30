@@ -1,7 +1,7 @@
 package com.zippy.stations.controller;
 
-import com.zippy.stations.dto.EstacionMapaDTO;
-import com.zippy.stations.service.interfaces.IEstacionService;
+import com.zippy.stations.dto.StationMapDTO;
+import com.zippy.stations.service.interfaces.IStationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +19,15 @@ import java.util.List;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/api/estaciones")
-public class EstacionController {
+@RequestMapping("/api/stations")
+public class StationController {
 
-    private IEstacionService estacionService;
+    private IStationService stationService;
 
-    @GetMapping("/getEstacionesAbiertasMapa")
-    public ResponseEntity<List<EstacionMapaDTO>> getEstacionesAbiertasMapa() {
+    @GetMapping("/getOpenStationsMap")
+    public ResponseEntity<List<StationMapDTO>> getOpenStationsMap() {
 
-        List<EstacionMapaDTO> estacionesAbiertasMapa = estacionService.getEstacionesAbiertasMapa();
+        List<StationMapDTO> estacionesAbiertasMapa = stationService.getOpenStationsMap();
 
         if(estacionesAbiertasMapa == null || estacionesAbiertasMapa.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -37,8 +37,8 @@ public class EstacionController {
     }
 
     @Autowired
-    public void setEstacionService(IEstacionService estacionService) {
-        this.estacionService = estacionService;
+    public void setStationService(IStationService stationService) {
+        this.stationService = stationService;
     }
 
 }
