@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Table(name = "station_status")
-public class EstadoEstacion {
+public class StationState {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +16,6 @@ public class EstadoEstacion {
     private Long id;
 
     @Column(name = "name")
-    private String nombreEstado;
+    private String statusName;
 
 }

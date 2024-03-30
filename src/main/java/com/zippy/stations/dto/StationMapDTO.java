@@ -13,11 +13,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EstacionMapaDTO {
+public class StationMapDTO {
 
     private Long id;
-    private String nombreEstacion;
-    private Double latitud;
-    private Double longitud;
+    private String name;
+    private Double latitude;
+    private Double longitude;
 
 }

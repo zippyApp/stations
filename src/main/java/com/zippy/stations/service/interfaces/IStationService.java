@@ -1,6 +1,6 @@
 package com.zippy.stations.service.interfaces;
 
-import com.zippy.stations.dto.EstacionMapaDTO;
+import com.zippy.stations.dto.StationMapDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +12,8 @@ import java.util.List;
  * @since 1.0
  */
 @Service
-public interface IEstacionService {
+public interface IStationService {
 
-    public List<EstacionMapaDTO> getEstacionesAbiertasMapa();
+    public List<StationMapDTO> getOpenStationsMap();
 
 }
