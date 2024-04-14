@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.util.Date;
 /**
@@ -18,7 +17,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Table(name = "station")
-public class Estacion implements Serializable {
+public class Station implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,29 +27,29 @@ public class Estacion implements Serializable {
     private Long id;
 
     @Column(name = "name")
-    private String nombreEstacion;
+    private String stationName;
 
     @Column(name = "address")
-    private String direccionEstacion;
+    private String stationAddress;
 
     @Column(name = "latitude")
-    private Double latitud;
+    private Double latitude;
 
     @Column(name = "longitude")
-    private Double longitud;
+    private Double longitude;
 
     @Column(name = "station_status_id")
-    private Long idEstadoEstacion;
+    private Long stationStatusId;
 
     @Column(name = "capacity")
-    private Integer capacidad;
+    private Integer capacity;
 
-    @Column(name = "last_manteinance")
-    private Date FechaultimoMantenimiento;
+    @Column(name = "last_maintenance")
+    private Date lastMaintenance;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "station_status_id", insertable = false, updatable = false)
-    private EstadoEstacion estadoEstacion;
+    private StationStatus stationStatus;
 
 }
