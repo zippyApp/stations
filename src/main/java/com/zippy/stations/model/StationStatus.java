@@ -23,8 +23,4 @@ public class StationStatus implements Serializable {
     @Column(name = "name")
     private String stationName;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "stationStatus")
-    private List<Station> station;
-
 }
