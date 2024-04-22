@@ -1,11 +1,9 @@
 package com.zippy.stations.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Data
@@ -21,6 +19,6 @@ public class StationStatus implements Serializable {
     private Long id;
 
     @Column(name = "name")
-    private String stationName;
+    private String stationStatusName;
 
 }

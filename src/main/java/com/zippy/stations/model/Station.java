@@ -48,7 +48,7 @@ public class Station implements Serializable {
     private Date lastMaintenance;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "station_status_id", insertable = false, updatable = false)
     private StationStatus stationStatus;
 

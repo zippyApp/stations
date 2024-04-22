@@ -15,7 +15,7 @@ import org.mapstruct.Mapping;
 public interface StationMapper {
 
     @Mapping(source="stationStatus.id", target="stationStatus.id")
-    @Mapping(source= "stationStatus.stationName", target="stationStatus.stationName")
+    @Mapping(source= "stationStatus.stationStatusName", target="stationStatus.stationStatusName")
     StationDTO toStationDTO(Station station);
 
 }
