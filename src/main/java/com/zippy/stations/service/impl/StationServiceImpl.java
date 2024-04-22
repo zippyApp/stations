@@ -5,6 +5,7 @@ import com.zippy.stations.repository.IEstacionesRepository;
 import com.zippy.stations.service.interfaces.IStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,13 +20,20 @@ public class StationServiceImpl implements IStationService {
 
     private IEstacionesRepository estacionesRepository;
 
+    @Override
+    @Transactional
     public List<Station> getAllStations() {
         return estacionesRepository.findAll();
     }
+
+    @Override
+    @Transactional
     public Station findStationById(Long idStation) {
         return estacionesRepository.findById(idStation).orElse(null);
     }
 
+    @Override
+    @Transactional
     public Station updateStationStatus(Long idStation, Long idStatus) {
         Station station = findStationById(idStation);
         if(station == null){
@@ -35,6 +43,8 @@ public class StationServiceImpl implements IStationService {
         return estacionesRepository.save(station);
     }
 
+    @Override
+    @Transactional
     public Station updateStationCapacity(Long stationId, Integer capacity) {
         Station station = findStationById(stationId);
         if(station == null){
@@ -43,6 +53,7 @@ public class StationServiceImpl implements IStationService {
         station.setCapacity(capacity);
         return estacionesRepository.save(station);
     }
+
     @Autowired
     public void setestacionesRepository(IEstacionesRepository estacionesRepository) {
         this.estacionesRepository = estacionesRepository;

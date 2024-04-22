@@ -19,7 +19,7 @@ import java.util.List;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/api/estaciones")
+@RequestMapping("/api/v1/stations")
 public class StationController {
 
     private IStationService stationService;
@@ -29,7 +29,7 @@ public class StationController {
     /**
      * Metodo para obtener todas las estaciones con stationStatus (id and statusName)
      */
-    @GetMapping("/getStationsMap/all")
+    @GetMapping("/all")
     public ResponseEntity<List<StationDTO>> getStationsMap() {
 
         List<Station> stations = stationService.getAllStations();
@@ -41,30 +41,16 @@ public class StationController {
     }
 
     /**
-     * Endpoint para obtener todas las estaciones
-     */
-    @GetMapping("/getStations/all")
-    public ResponseEntity<List<Station>> getStations() {
-
-        List<Station> stations = stationService.getAllStations();
-        if(stations == null || stations.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(stations, HttpStatus.OK);
-        }
-    }
-
-    /**
      * Endpoint para obtener una estación por su id
      * @param stationId
      */
     @GetMapping("/getStationById/{stationId}")
-    public ResponseEntity<Station> getStationById(@PathVariable Long stationId) {
+    public ResponseEntity<StationDTO> getStationById(@PathVariable Long stationId) {
         Station station = stationService.findStationById(stationId);
         if(station == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(station, HttpStatus.OK);
+            return new ResponseEntity<>(stationMapper.toStationDTO(station), HttpStatus.OK);
         }
     }
 
@@ -74,7 +60,7 @@ public class StationController {
      * @param stationStatusId
      */
     @PutMapping("/updateStationStatus")
-    public ResponseEntity<Station> updateStationStatus(@RequestHeader Long stationId, @RequestHeader Long stationStatusId) {
+    public ResponseEntity<StationDTO> updateStationStatus(@RequestHeader Long stationId, @RequestHeader Long stationStatusId) {
 
         //Si el id del status proporcionado por el usuario no existe, se retorna un BAD_REQUEST
         if (!stationStatusRepository.existsById(stationStatusId)) {
@@ -84,17 +70,17 @@ public class StationController {
         if(station == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(station, HttpStatus.OK);
+            return new ResponseEntity<>(stationMapper.toStationDTO(station), HttpStatus.OK);
         }
     }
 
     @PutMapping("/updateStationCapacity")
-    public ResponseEntity<Station> updateStationCapacity(@RequestHeader Long stationId, @RequestHeader Integer capacity) {
+    public ResponseEntity<StationDTO> updateStationCapacity(@RequestHeader Long stationId, @RequestHeader Integer capacity) {
         Station station = stationService.updateStationCapacity(stationId, capacity);
         if(station == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(station, HttpStatus.OK);
+            return new ResponseEntity<>(stationMapper.toStationDTO(station), HttpStatus.OK);
         }
     }
 
