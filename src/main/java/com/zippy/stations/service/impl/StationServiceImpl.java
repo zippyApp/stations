@@ -1,7 +1,7 @@
 package com.zippy.stations.service.impl;
 
 import com.zippy.stations.model.Station;
-import com.zippy.stations.repository.IEstacionesRepository;
+import com.zippy.stations.repository.IStationRepository;
 import com.zippy.stations.service.interfaces.IStationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,18 +18,18 @@ import java.util.List;
 @Service
 public class StationServiceImpl implements IStationService {
 
-    private IEstacionesRepository estacionesRepository;
+    private IStationRepository stationRepository;
 
     @Override
     @Transactional
     public List<Station> getAllStations() {
-        return estacionesRepository.findAll();
+        return stationRepository.findAll();
     }
 
     @Override
     @Transactional
     public Station findStationById(Long idStation) {
-        return estacionesRepository.findById(idStation).orElse(null);
+        return stationRepository.findById(idStation).orElse(null);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class StationServiceImpl implements IStationService {
             return null;
         }
         station.setStationStatusId(idStatus);
-        return estacionesRepository.save(station);
+        return stationRepository.save(station);
     }
 
     @Override
@@ -51,11 +51,11 @@ public class StationServiceImpl implements IStationService {
             return null;
         }
         station.setCapacity(capacity);
-        return estacionesRepository.save(station);
+        return stationRepository.save(station);
     }
 
     @Autowired
-    public void setestacionesRepository(IEstacionesRepository estacionesRepository) {
-        this.estacionesRepository = estacionesRepository;
+    public void setestacionesRepository(IStationRepository estacionesRepository) {
+        this.stationRepository = estacionesRepository;
     }
 }

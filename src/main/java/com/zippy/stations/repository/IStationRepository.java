@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * @since 1.0
  */
 @Repository
-public interface IEstacionesRepository extends JpaRepository<Station, Long> {
+public interface IStationRepository extends JpaRepository<Station, Long> {
 
 }
