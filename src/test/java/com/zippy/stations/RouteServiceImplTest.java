@@ -50,20 +50,20 @@ class RouteServiceImplTest {
     void setUp() throws Exception {
         station1 = new Station();
         station1.setId(1L);
-        station1.setLatitude(4.6097100);
-        station1.setLongitude(-74.0817500);
+        station1.setLatitude(7.140709);
+        station1.setLongitude(-73.121012);
 
         station2 = new Station();
         station2.setId(2L);
-        station2.setLatitude(3.4372200);
-        station2.setLongitude(-76.5225000);
+        station2.setLatitude(7.116833);
+        station2.setLongitude(-73.105517);
 
         route = new Route();
         route.setOriginStationId(1L);
         route.setDestinationStationId(2L);
 
         ObjectMapper mapper = new ObjectMapper();
-        String jsonResponse = "{ \"routes\": [{ \"distance\": 5000.0, \"duration\": 300.0 }] }";
+        String jsonResponse = "{ \"routes\": [{ \"distance\": 4498.1, \"duration\": 1264.6 }] }";
         mapboxResponse = mapper.readTree(jsonResponse);
     }
 
@@ -73,19 +73,24 @@ class RouteServiceImplTest {
      */
     @Test
     void setAllRoutes_shouldUpdateRoutes() {
+        // Configurar las dependencias simuladas
         when(stationService.getAllStations()).thenReturn(Arrays.asList(station1, station2));
         when(mapboxClient.getRoutetoDestination(anyString())).thenReturn(mapboxResponse);
         when(routeRepository.findByOriginStationIdAndDestinationStationId(anyLong(), anyLong())).thenReturn(null);
 
+        // Ejecutar el método setAllRoutes
         routeService.setAllRoutes();
 
+        // Verificar que el repositorio de rutas haya guardado las rutas calculadas
         verify(routeRepository, times(2)).save(routeCaptor.capture());
         List<Route> capturedRoutes = routeCaptor.getAllValues();
+
+        // Validar las rutas capturadas
         assertEquals(2, capturedRoutes.size());
         assertEquals(1L, capturedRoutes.get(0).getOriginStationId());
         assertEquals(2L, capturedRoutes.get(0).getDestinationStationId());
-        assertEquals(0.5, capturedRoutes.get(0).getDistance());
-        assertEquals(5, capturedRoutes.get(0).getDuration());
+        assertEquals(4.5, capturedRoutes.get(0).getDistance());
+        assertEquals(21, capturedRoutes.get(0).getDuration());
     }
 
     /**
@@ -97,10 +102,10 @@ class RouteServiceImplTest {
         when(stationService.findStationById(1L)).thenReturn(station1);
         when(mapboxClient.getRoutetoOrigin(anyString())).thenReturn(mapboxResponse);
 
-        JsonNode result = routeService.getRouteUserToOrigin("4.6097100,-74.0817500", 1L);
+        JsonNode result = routeService.getRouteUserToOrigin("7.140709,-73.121012", 1L);
 
         assertNotNull(result);
-        assertEquals(5000.0, result.get("routes").get(0).get("distance").asDouble());
+        assertEquals(4498.1, result.get("routes").get(0).get("distance").asDouble());
     }
 
     /**
@@ -111,7 +116,7 @@ class RouteServiceImplTest {
     void getRouteUserToOrigin_shouldReturnNullForInvalidStation() {
         when(stationService.findStationById(1L)).thenReturn(null);
 
-        JsonNode result = routeService.getRouteUserToOrigin("4.6097100,-74.0817500", 1L);
+        JsonNode result = routeService.getRouteUserToOrigin("7.140709,-73.121012", 1L);
 
         assertNull(result);
     }
@@ -130,7 +135,7 @@ class RouteServiceImplTest {
         JsonNode result = routeService.getRouteOriginToDestination(1L, 2L);
 
         assertNotNull(result);
-        assertEquals(5000.0, result.get("routes").get(0).get("distance").asDouble());
+        assertEquals(4498.1, result.get("routes").get(0).get("distance").asDouble());
     }
 
     /**
