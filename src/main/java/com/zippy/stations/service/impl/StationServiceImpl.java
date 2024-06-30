@@ -9,12 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Servicio de estaciones
- *
- * @author Jerson Johan Jerez Vargas
- * @since 1.0
- */
 @Service
 public class StationServiceImpl implements IStationService {
 
@@ -55,7 +49,7 @@ public class StationServiceImpl implements IStationService {
     }
 
     @Autowired
-    public void setestacionesRepository(IStationRepository estacionesRepository) {
+    public void setEstacionesRepository(IStationRepository estacionesRepository) {
         this.stationRepository = estacionesRepository;
     }
 }

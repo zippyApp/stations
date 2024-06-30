@@ -5,12 +5,7 @@ import com.zippy.stations.model.Station;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-/**
- * Mapper de estaciones
- *
- * @author Johan Jerez
- *
- */
+
 @Mapper(componentModel = "spring")
 public interface StationMapper {
 
