@@ -7,12 +7,6 @@ import lombok.Setter;
 
 import java.util.Date;
 
-/**
- * DTO para exclusivamnete renderizar las estaciones en el mapa
- *
- * @author Johan Jerez
- * @since 1.0
- */
 @Getter
 @Setter
 @NoArgsConstructor

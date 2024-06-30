@@ -6,13 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Date;
-/**
- * Clase para el manejo de estaciones
- *
- * @author Johan Jerez
- * @since 1.0
- *
- */
+
 @Entity
 @Data
 @NoArgsConstructor

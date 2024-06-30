@@ -12,12 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 
-/**
- * Clase controladora para estaciones
- *
- * @author Jerson Johan Jerez Vargas
- * @since 1.0
- */
+
 @RestController
 @RequestMapping("/api/v1/stations")
 public class StationController {
