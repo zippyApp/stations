@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 class StationServiceTest {
@@ -54,7 +53,7 @@ class StationServiceTest {
         Station station = new Station();
         when(stationRepository.findById(anyLong())).thenReturn(Optional.of(station));
 
-        Station result = stationService.findStationById(1L);
+        Optional<Station> result = stationService.findStationById(1L);
         assertNotNull(result);
         verify(stationRepository, times(1)).findById(1L);
     }
@@ -66,7 +65,7 @@ class StationServiceTest {
     void testFindStationById_notFound() {
         when(stationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Station result = stationService.findStationById(1L);
+        Optional<Station> result = stationService.findStationById(1L);
         assertNull(result);
         verify(stationRepository, times(1)).findById(1L);
     }
@@ -80,7 +79,7 @@ class StationServiceTest {
         when(stationRepository.findById(anyLong())).thenReturn(Optional.of(station));
         when(stationRepository.save(any(Station.class))).thenReturn(station);
 
-        Station result = stationService.updateStationStatus(1L, 2L);
+        Optional<Station> result = stationService.updateStationStatus(1L, 2L);
         assertNotNull(result);
         assertEquals(2L, station.getStationStatusId());
         verify(stationRepository, times(1)).findById(1L);
@@ -94,7 +93,7 @@ class StationServiceTest {
     void testUpdateStationStatus_notFound() {
         when(stationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Station result = stationService.updateStationStatus(1L, 2L);
+        Optional<Station> result = stationService.updateStationStatus(1L, 2L);
         assertNull(result);
         verify(stationRepository, times(1)).findById(1L);
         verify(stationRepository, never()).save(any(Station.class));
@@ -109,7 +108,7 @@ class StationServiceTest {
         when(stationRepository.findById(anyLong())).thenReturn(Optional.of(station));
         when(stationRepository.save(any(Station.class))).thenReturn(station);
 
-        Station result = stationService.updateStationCapacity(1L, 30);
+        Optional<Station> result = stationService.updateStationCapacity(1L, 30);
         assertNotNull(result);
         assertEquals(30, station.getCapacity());
         verify(stationRepository, times(1)).findById(1L);
@@ -123,7 +122,7 @@ class StationServiceTest {
     void testUpdateStationCapacity_notFound() {
         when(stationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        Station result = stationService.updateStationCapacity(1L, 30);
+        Optional<Station> result = stationService.updateStationCapacity(1L, 30);
         assertNull(result);
         verify(stationRepository, times(1)).findById(1L);
         verify(stationRepository, never()).save(any(Station.class));

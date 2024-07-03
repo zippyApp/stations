@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 @Table(name = "station")
 public class Station implements Serializable {
-
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id

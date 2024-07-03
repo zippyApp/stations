@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -81,7 +82,7 @@ public class StationControllerTest {
         Station station = new Station();
         StationDTO stationDTO = new StationDTO();
 
-        Mockito.when(stationService.findStationById(anyLong())).thenReturn(station);
+        Mockito.when(stationService.findStationById(anyLong())).thenReturn(Optional.of(station));
         Mockito.when(stationMapper.toStationDTO(station)).thenReturn(stationDTO);
 
         mockMvc.perform(get("/api/v1/stations/getStationById/1"))
@@ -111,7 +112,7 @@ public class StationControllerTest {
         StationDTO stationDTO = new StationDTO();
 
         Mockito.when(stationStatusRepository.existsById(anyLong())).thenReturn(true);
-        Mockito.when(stationService.updateStationStatus(anyLong(), anyLong())).thenReturn(station);
+        Mockito.when(stationService.updateStationStatus(anyLong(), anyLong())).thenReturn(Optional.of(station));
         Mockito.when(stationMapper.toStationDTO(station)).thenReturn(stationDTO);
 
         mockMvc.perform(put("/api/v1/stations/updateStationStatus")
@@ -159,7 +160,7 @@ public class StationControllerTest {
         Station station = new Station();
         StationDTO stationDTO = new StationDTO();
 
-        Mockito.when(stationService.updateStationCapacity(anyLong(), anyInt())).thenReturn(station);
+        Mockito.when(stationService.updateStationCapacity(anyLong(), anyInt())).thenReturn(Optional.of(station));
         Mockito.when(stationMapper.toStationDTO(station)).thenReturn(stationDTO);
 
         mockMvc.perform(put("/api/v1/stations/updateStationCapacity")
