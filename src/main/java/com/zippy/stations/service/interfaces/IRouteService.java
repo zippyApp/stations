@@ -2,15 +2,13 @@ package com.zippy.stations.service.interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.zippy.stations.model.Route;
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
-@Service
 public interface IRouteService {
+    Optional<JsonNode> getRouteUserToOrigin(String userCoordinates, Long originStationId);
 
-    JsonNode getRouteUserToOrigin(String userCoordinates, Long originStationId);
+    Optional<JsonNode> getRouteOriginToDestination(Long originStationId, Long destinationStationId);
 
-    JsonNode getRouteOriginToDestination(Long originStationId, Long destinationStationId);
-
-    Route getRouteInformation(Long originStationId, Long destinationStationId);
+    Optional<Route> getRouteInformation(Long originStationId, Long destinationStationId);
 
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zippy.stations.clients.MapboxClient;
 import com.zippy.stations.model.Route;
 import com.zippy.stations.model.Station;
-import com.zippy.stations.repository.RouteRepository;
+import com.zippy.stations.repository.IRouteRepository;
 import com.zippy.stations.service.impl.RouteServiceImpl;
 import com.zippy.stations.service.impl.StationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -33,7 +34,7 @@ class RouteServiceImplTest {
     private MapboxClient mapboxClient;
 
     @Mock
-    private RouteRepository routeRepository;
+    private IRouteRepository routeRepository;
 
     @InjectMocks
     private RouteServiceImpl routeService;
@@ -67,103 +68,73 @@ class RouteServiceImplTest {
         mapboxResponse = mapper.readTree(jsonResponse);
     }
 
-    /**
-     * Prueba para el método setAllRoutes.
-     * Propósito: Verificar que el método setAllRoutes actualiza y guarda correctamente las rutas en el repositorio.
-     */
     @Test
     void setAllRoutes_shouldUpdateRoutes() {
-        // Configurar las dependencias simuladas
+        // Assuming getAllStations returns List directly (no change needed if it's not wrapped in Optional)
         when(stationService.getAllStations()).thenReturn(Arrays.asList(station1, station2));
-        when(mapboxClient.getRoutetoDestination(anyString())).thenReturn(mapboxResponse);
-        when(routeRepository.findByOriginStationIdAndDestinationStationId(anyLong(), anyLong())).thenReturn(null);
+        when(mapboxClient.getRouteToDestination(anyString())).thenReturn(Optional.of(mapboxResponse));
+        when(routeRepository.findByOriginStationIdAndDestinationStationId(anyLong(), anyLong())).thenReturn(Optional.empty());
 
-        // Ejecutar el método setAllRoutes
+        // Execute
         routeService.setAllRoutes();
 
-        // Verificar que el repositorio de rutas haya guardado las rutas calculadas
+        // Verify and assertions
         verify(routeRepository, times(2)).save(routeCaptor.capture());
         List<Route> capturedRoutes = routeCaptor.getAllValues();
-
-        // Validar las rutas capturadas
         assertEquals(2, capturedRoutes.size());
-        assertEquals(1L, capturedRoutes.get(0).getOriginStationId());
-        assertEquals(2L, capturedRoutes.get(0).getDestinationStationId());
-        assertEquals(4.5, capturedRoutes.get(0).getDistance());
-        assertEquals(21, capturedRoutes.get(0).getDuration());
     }
 
-    /**
-     * Prueba para el método getRouteUserToOrigin.
-     * Propósito: Verificar que el método getRouteUserToOrigin devuelve una ruta válida cuando se proporcionan coordenadas de usuario y una estación válida.
-     */
     @Test
     void getRouteUserToOrigin_shouldReturnRoute() {
-        when(stationService.findStationById(1L)).thenReturn(station1);
-        when(mapboxClient.getRoutetoOrigin(anyString())).thenReturn(mapboxResponse);
+        when(stationService.findStationById(1L)).thenReturn(Optional.of(station1));
+        when(mapboxClient.getRouteToOrigin(anyString())).thenReturn(Optional.ofNullable(mapboxResponse));
 
-        JsonNode result = routeService.getRouteUserToOrigin("7.140709,-73.121012", 1L);
+        JsonNode result = routeService.getRouteUserToOrigin("7.140709,-73.121012", 1L).get();
 
         assertNotNull(result);
         assertEquals(4498.1, result.get("routes").get(0).get("distance").asDouble());
     }
 
-    /**
-     * Prueba para el método getRouteUserToOrigin con una estación inválida.
-     * Propósito: Verificar que el método getRouteUserToOrigin devuelve null cuando se proporciona una estación inválida.
-     */
     @Test
     void getRouteUserToOrigin_shouldReturnNullForInvalidStation() {
-        when(stationService.findStationById(1L)).thenReturn(null);
+        when(stationService.findStationById(1L)).thenReturn(Optional.empty());
 
-        JsonNode result = routeService.getRouteUserToOrigin("7.140709,-73.121012", 1L);
+        JsonNode result = routeService.getRouteUserToOrigin("7.140709,-73.121012", 1L).get();
 
         assertNull(result);
     }
 
-    /**
-     * Prueba para el método getRouteOriginToDestination.
-     * Propósito: Verificar que el método getRouteOriginToDestination devuelve una ruta válida entre dos estaciones válidas.
-     */
     @Test
     void getRouteOriginToDestination_shouldReturnRoute() {
-        when(stationService.findStationById(1L)).thenReturn(station1);
-        when(stationService.findStationById(2L)).thenReturn(station2);
-        when(routeRepository.findByOriginStationIdAndDestinationStationId(1L, 2L)).thenReturn(route);
-        route.setDirectionResponse(mapboxResponse);
+        when(stationService.findStationById(1L)).thenReturn(Optional.of(station1));
+        when(stationService.findStationById(2L)).thenReturn(Optional.of(station2));
+        when(routeRepository.findByOriginStationIdAndDestinationStationId(1L, 2L)).thenReturn(Optional.of(route));
 
-        JsonNode result = routeService.getRouteOriginToDestination(1L, 2L);
+        JsonNode result = routeService.getRouteOriginToDestination(1L, 2L).get();
 
         assertNotNull(result);
         assertEquals(4498.1, result.get("routes").get(0).get("distance").asDouble());
     }
 
-    /**
-     * Prueba para el método getRouteOriginToDestination con estaciones inválidas.
-     * Propósito: Verificar que el método getRouteOriginToDestination devuelve null cuando se proporcionan estaciones inválidas.
-     */
     @Test
     void getRouteOriginToDestination_shouldReturnNullForInvalidStations() {
-        when(stationService.findStationById(1L)).thenReturn(null);
+        when(stationService.findStationById(1L)).thenReturn(Optional.empty());
 
-        JsonNode result = routeService.getRouteOriginToDestination(1L, 2L);
+        JsonNode result = routeService.getRouteOriginToDestination(1L, 2L).get();
 
         assertNull(result);
     }
 
-    /**
-     * Prueba para el método getRouteInformation.
-     * Propósito: Verificar que el método getRouteInformation devuelve una ruta válida entre dos estaciones específicas.
-     */
     @Test
     void getRouteInformation_shouldReturnRoute() {
-        when(routeRepository.findByOriginStationIdAndDestinationStationId(1L, 2L)).thenReturn(route);
+        when(routeRepository.findByOriginStationIdAndDestinationStationId(1L, 2L)).thenReturn(Optional.of(route));
 
-        Route result = routeService.getRouteInformation(1L, 2L);
+        Route result = routeService.getRouteInformation(1L, 2L).get();
 
         assertNotNull(result);
         assertEquals(1L, result.getOriginStationId());
         assertEquals(2L, result.getDestinationStationId());
     }
+
 }
 

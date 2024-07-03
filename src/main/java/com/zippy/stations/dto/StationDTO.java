@@ -11,7 +11,6 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class StationDTO {
-
     private Long id;
     private String stationName;
     private String stationAddress;
@@ -20,5 +19,4 @@ public class StationDTO {
     private StationStatus stationStatus;
     private Integer capacity;
     private Date lastMaintenance;
-
 }

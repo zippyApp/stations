@@ -2,16 +2,11 @@ package com.zippy.stations.controller;
 
 import com.zippy.stations.dto.StationDTO;
 import com.zippy.stations.mappers.StationMapper;
-import com.zippy.stations.model.Station;
-import com.zippy.stations.repository.IStationStatusRepository;
 import com.zippy.stations.service.interfaces.IStationService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
-
-
 
 @RestController
 @RequestMapping("/api/v1/stations")
@@ -19,68 +14,39 @@ public class StationController {
 
     private IStationService stationService;
     private StationMapper stationMapper;
-    private IStationStatusRepository stationStatusRepository;
 
-    /**
-     * Metodo para obtener todas las estaciones con stationStatus (id and statusName)
-     */
     @GetMapping("/all")
     public ResponseEntity<List<StationDTO>> getStationsMap() {
-
-        List<Station> stations = stationService.getAllStations();
-        if(stations == null || stations.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(stations.stream().map(station->stationMapper.toStationDTO(station)).toList(), HttpStatus.OK);
-        }
+        return ResponseEntity.ok(stationService.getAllStations().stream().map(stationMapper::toStationDTO).toList());
     }
 
-    /**
-     * Endpoint para obtener una estación por su id
-     * @param stationId
-     */
-    @GetMapping("/getStationById/{stationId}")
+    @GetMapping("/{stationId}")
     public ResponseEntity<StationDTO> getStationById(@PathVariable Long stationId) {
-        Station station = stationService.findStationById(stationId);
-        if(station == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(stationMapper.toStationDTO(station), HttpStatus.OK);
-        }
+        return stationService.findStationById(stationId)
+                .map(stationMapper::toStationDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Endpoint para actualizar el estado de la estación
-     * @param stationId
-     * @param stationStatusId
-     */
-    @PutMapping("/updateStationStatus")
+
+    @PutMapping("/update/status")
     public ResponseEntity<StationDTO> updateStationStatus(@RequestHeader Long stationId, @RequestHeader Long stationStatusId) {
-
-        //Si el id del status proporcionado por el usuario no existe, se retorna un BAD_REQUEST
-        if (!stationStatusRepository.existsById(stationStatusId)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Station station = stationService.updateStationStatus(stationId, stationStatusId);
-        if(station == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(stationMapper.toStationDTO(station), HttpStatus.OK);
-        }
+        return stationService.updateStationStatus(stationId, stationStatusId)
+                .map(stationMapper::toStationDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
-    @PutMapping("/updateStationCapacity")
+    @PutMapping("/update/capacity")
     public ResponseEntity<StationDTO> updateStationCapacity(@RequestHeader Long stationId, @RequestHeader Integer capacity) {
-        Station station = stationService.updateStationCapacity(stationId, capacity);
-        if(station == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(stationMapper.toStationDTO(station), HttpStatus.OK);
-        }
+        return stationService.updateStationCapacity(stationId, capacity)
+                .map(stationMapper::toStationDTO)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     @Autowired
-    public void setEstacionService(IStationService stationService) {
+    public void setStationService(IStationService stationService) {
         this.stationService = stationService;
     }
 
@@ -88,10 +54,4 @@ public class StationController {
     public void setStationMapper(StationMapper stationMapper) {
         this.stationMapper = stationMapper;
     }
-
-    @Autowired
-    public void setStationStatusRepository(IStationStatusRepository stationStatusRepository) {
-        this.stationStatusRepository = stationStatusRepository;
-    };
-
 }

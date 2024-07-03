@@ -1,18 +1,15 @@
 package com.zippy.stations.service.interfaces;
 
 import com.zippy.stations.model.Station;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
 
-
-@Service
 public interface IStationService {
-
     List<Station> getAllStations();
-    Station findStationById(Long idStation);
 
-    Station updateStationStatus(Long idStation, Long idStatus);
+    Optional<Station> findStationById(Long idStation);
 
-    Station updateStationCapacity(Long stationId, Integer capacity);
+    Optional<Station> updateStationStatus(Long idStation, Long idStatus);
+
+    Optional<Station> updateStationCapacity(Long stationId, Integer capacity);
 }
